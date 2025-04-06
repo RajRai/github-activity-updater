@@ -83,16 +83,17 @@ def clear_repo():
 
     if delete_response.status_code == 204:
         print(f"Repository {repo_name} deleted successfully.")
-        shutil.rmtree(repo_path)
+        if os.path.exists(repo_path):
+            shutil.rmtree(repo_path)
     else:
         print(f"Failed to delete repository: {delete_response.json()}")
 
 
-def create_commits_for_day(repo):
+def create_commits_for_day():
     start_date = get_current_sunday() - datetime.timedelta(weeks=51-(51-len(HELLO[0]))//2)
 
     clear_repo()
-    ensure_repo_exists()
+    repo = ensure_repo_exists()
 
     for row in range(len(HELLO)):
         for col in range(len(HELLO[row])):
@@ -110,9 +111,8 @@ def create_commits_for_day(repo):
 
 
 def main():
-    repo = ensure_repo_exists()
     while True:
-        create_commits_for_day(repo)
+        create_commits_for_day()
         time.sleep(86400)  # Sleep for one day
 
 
